@@ -9,7 +9,7 @@ import (
 
 func New() (*http.Server, error) {
 
-	subApp, err := api.New("./auth/credentials.txt")
+	subApp, err := api.New("./data/credentials.txt")
 	if err != nil {
 		return nil, err
 	}
