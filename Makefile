@@ -6,7 +6,7 @@ GOMODDOWNLOAD=$(GOCMD) mod download -x
 
 BINARY_NAME=auth
 
-buiild:
+build:
 	$(GOBUILD) -o $(BINARY_NAME) -v
 
 test:
