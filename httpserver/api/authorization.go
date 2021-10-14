@@ -44,9 +44,16 @@ func (a *App) login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// set cookies
-	http.SetCookie(w, cookies[0])
-	http.SetCookie(w, cookies[1])
-	w.WriteHeader(http.StatusAccepted)
+	for _, cookie := range cookies {
+		http.SetCookie(w, cookie)
+	}
+
+	// fetching query parameter for redirection
+	redirect, ok := r.URL.Query()["redirect_uri"]
+	if ok {
+		http.Redirect(w, r, redirect[0], http.StatusTemporaryRedirect)
+		return
+	}
 }
 
 func (a *App) logout(w http.ResponseWriter, r *http.Request) {

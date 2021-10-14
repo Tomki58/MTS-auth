@@ -13,7 +13,9 @@ const ContextUserKey ContextKey = "user"
 func (a *App) identificate(w http.ResponseWriter, r *http.Request) {
 	if name, ok := r.Context().Value("user").(string); ok {
 		response := serializer.SerializeResponseJSON(name)
-		w.Write(response)
+		if _, err := w.Write(response); err != nil {
+			return
+		}
 	} else {
 		err := errors.New("cannot fetch username from context")
 		response := serializer.SerializeResponseJSON(err)

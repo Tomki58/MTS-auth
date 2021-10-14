@@ -21,7 +21,7 @@ func SerializeResponseJSON(data interface{}) []byte {
 		response.Success = true
 		response.Data = data
 	}
-	jRepr, err := json.Marshal(response)
+	jRepr, err := json.MarshalIndent(response, "", "\t")
 	if err != nil {
 		return nil
 	}

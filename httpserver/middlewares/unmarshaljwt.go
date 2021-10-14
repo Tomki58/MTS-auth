@@ -25,12 +25,12 @@ type MyClaims struct {
 func HandleJWT(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		user := new(User)
-		refreshCookie, err := r.Cookie("refresh")
+		accessCookie, err := r.Cookie("access")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		tokenString := refreshCookie.Value
+		tokenString := accessCookie.Value
 		username, err := validateJWT(tokenString)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -44,7 +44,6 @@ func HandleJWT(next http.Handler) http.Handler {
 
 // validateJWTN validates JWT-token and returns the token
 func validateJWT(tokenString string) (interface{}, error) {
-
 	token, err := jwt.ParseWithClaims(tokenString, &MyClaims{}, func(t *jwt.Token) (interface{}, error) {
 		return []byte("MyBaseKey"), nil
 	})
