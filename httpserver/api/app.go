@@ -5,7 +5,6 @@ import (
 	"MTS/auth/httpserver/middlewares"
 
 	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
 )
 
 type App struct {
@@ -25,7 +24,7 @@ func New(creds string) (*App, error) {
 }
 
 func (a *App) ApplyEndpoints(router *chi.Mux) {
-	router.Use(middleware.DefaultLogger)
+	router.Use(middlewares.Logging)
 
 	// login/logout endpoints
 	router.Group(func(r chi.Router) {
