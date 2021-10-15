@@ -6,7 +6,6 @@ import (
 	"MTS/auth/httpserver/profiler"
 
 	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
 )
 
 // App is a struct for application with all builtins
@@ -28,7 +27,7 @@ func New(creds string) (*App, error) {
 
 // ApplyEndpoints applies handlers for router paths
 func (a *App) ApplyEndpoints(router *chi.Mux) {
-	router.Use(middleware.DefaultLogger)
+	router.Use(middlewares.Logging)
 
 	// login/logout endpoints
 	router.Group(func(r chi.Router) {

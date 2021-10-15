@@ -48,6 +48,8 @@ func (a *App) login(w http.ResponseWriter, r *http.Request) {
 		http.SetCookie(w, cookie)
 	}
 
+	w.WriteHeader(http.StatusOK)
+
 	// fetching query parameter for redirection
 	redirect, ok := r.URL.Query()["redirect_uri"]
 	if ok {
