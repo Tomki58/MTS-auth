@@ -9,6 +9,7 @@ import (
 	"github.com/go-chi/chi/middleware"
 )
 
+// App is a struct for application with all builtins
 type App struct {
 	Authenticator basicauth.BasicAuthorizator
 }
@@ -25,6 +26,7 @@ func New(creds string) (*App, error) {
 	}, nil
 }
 
+// ApplyEndpoints applies handlers for router paths
 func (a *App) ApplyEndpoints(router *chi.Mux) {
 	router.Use(middleware.DefaultLogger)
 
@@ -34,7 +36,10 @@ func (a *App) ApplyEndpoints(router *chi.Mux) {
 		r.Get("/logout", a.logout)
 	})
 
-	router.Mount("/debug", profiler.Profiler())
+	router.Group(func(r chi.Router) {
+		r.Use(middlewares.Debug)
+		r.Mount("/debug", profiler.Profiler())
+	})
 
 	// i/me endpoints
 	router.Group(func(r chi.Router) {

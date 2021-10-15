@@ -10,6 +10,8 @@ import (
 func Profiler() http.Handler {
 	r := chi.NewRouter()
 
+	// debug middleware checking the app's state
+
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, r.RequestURI+"/pprof/", http.StatusMovedPermanently)
 	})
