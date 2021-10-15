@@ -3,11 +3,13 @@ package api
 import (
 	"MTS/auth/httpserver/api/auth/basicauth"
 	"MTS/auth/httpserver/middlewares"
+	"MTS/auth/httpserver/profiler"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 )
 
+// App is a struct for application with all builtins
 type App struct {
 	Authenticator basicauth.BasicAuthorizator
 }
@@ -24,6 +26,7 @@ func New(creds string) (*App, error) {
 	}, nil
 }
 
+// ApplyEndpoints applies handlers for router paths
 func (a *App) ApplyEndpoints(router *chi.Mux) {
 	router.Use(middleware.DefaultLogger)
 
@@ -31,6 +34,11 @@ func (a *App) ApplyEndpoints(router *chi.Mux) {
 	router.Group(func(r chi.Router) {
 		r.Get("/login", a.login)
 		r.Get("/logout", a.logout)
+	})
+
+	router.Group(func(r chi.Router) {
+		r.Use(middlewares.Debug)
+		r.Mount("/debug", profiler.Profiler())
 	})
 
 	// i/me endpoints
