@@ -1,34 +1,31 @@
 package middlewares
 
 import (
+	"MTS/auth/common"
 	"net/http"
-	"os"
 
-	"github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
-
-var logger = &logrus.Logger{
-	Out:          os.Stdout,
-	Formatter:    &logrus.JSONFormatter{},
-	ReportCaller: true,
-	Level:        logrus.InfoLevel,
-}
 
 func Logging(next http.Handler) http.Handler {
 	// write your middleware definition here
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// request log
-		logger.WithFields(logrus.Fields{
-			"clientIp":      r.RemoteAddr,
-			"path":          r.URL.Path,
-			"method":        r.Method,
-			"contentLength": r.ContentLength,
-		}).Info("Incoming request")
+		// logger.WithFields(logrus.Fields{
+		// 	"clientIp":      r.RemoteAddr,
+		// 	"path":          r.URL.Path,
+		// 	"method":        r.Method,
+		// 	"contentLength": r.ContentLength,
+		// }).Info("Incoming request")
+
+		common.Logger.Info("Incoming request",
+			zap.String("method", r.Method))
 
 		next.ServeHTTP(w, r)
 
-		logger.WithFields(logrus.Fields{
-			"statusCode": w.Header().Get("statusCode"),
-		}).Info("Outgoing response")
+		// logger.WithFields(logrus.Fields{
+		// 	"statusCode": w.Header().Get("statusCode"),
+		// }).Info("Outgoing response")
+		common.Logger.Info("Outgoing response")
 	})
 }
